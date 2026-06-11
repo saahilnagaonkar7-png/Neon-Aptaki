@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NEON APTAKI // 3D Sci-Fi FPS</title>
+    <!-- Google Fonts for futuristic typography -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- 3D Viewport Container -->
+    <div id="game-container"></div>
+
+    <!-- UI Overlay / HUD -->
+    <div id="hud" class="hidden">
+        <!-- Top HUD Panel -->
+        <div class="hud-top">
+            <div class="hud-stat-box score-box">
+                <span class="hud-label">SCORE</span>
+                <span id="score-val" class="hud-value">000,000</span>
+                <div class="multiplier-tag" id="mult-tag">x1</div>
+            </div>
+            
+            <div class="hud-center-title">
+                <span class="glitch-text" data-text="NEON APTAKI">NEON APTAKI</span>
+                <span class="system-status">SYSTEMS ACTIVE</span>
+            </div>
+
+            <div class="hud-stat-box highscore-box">
+                <span class="hud-label">HIGH SCORE</span>
+                <span id="highscore-val" class="hud-value">000,000</span>
+            </div>
+        </div>
+
+        <!-- Crosshair & Hitmarker -->
+        <div id="crosshair-container">
+            <div id="crosshair">
+                <div class="crosshair-dot"></div>
+                <div class="crosshair-ring"></div>
+                <div class="crosshair-line top"></div>
+                <div class="crosshair-line right"></div>
+                <div class="crosshair-line bottom"></div>
+                <div class="crosshair-line left"></div>
+            </div>
+            <div id="hitmarker">
+                <div class="hitmarker-line top-left"></div>
+                <div class="hitmarker-line top-right"></div>
+                <div class="hitmarker-line bottom-left"></div>
+                <div class="hitmarker-line bottom-right"></div>
+            </div>
+        </div>
+
+        <!-- Aptaki Power Popup -->
+        <div id="aptaki-popup">APTAKI POWER</div>
+
+        <!-- Damage Flash overlay -->
+        <div id="damage-flash"></div>
+
+        <!-- Bottom HUD Panel -->
+        <div class="hud-bottom">
+            <!-- Health & Shield bars -->
+            <div class="hud-vitality">
+                <div class="bar-container">
+                    <span class="bar-label">HP</span>
+                    <div class="bar-track">
+                        <div id="hp-bar" class="bar-fill hp-fill" style="width: 100%"></div>
+                    </div>
+                    <span id="hp-val" class="bar-number">100</span>
+                </div>
+                <div class="bar-container">
+                    <span class="bar-label">SHD</span>
+                    <div class="bar-track">
+                        <div id="shd-bar" class="bar-fill shd-fill" style="width: 100%"></div>
+                    </div>
+                    <span id="shd-val" class="bar-number">100</span>
+                </div>
+            </div>
+
+            <!-- Ammo bar -->
+            <div class="hud-weapon">
+                <div class="ammo-container">
+                    <span class="ammo-label">PLASMA CHARGE</span>
+                    <div class="ammo-digits">
+                        <span id="ammo-current">15</span>
+                        <span class="ammo-slash">/</span>
+                        <span id="ammo-max">15</span>
+                    </div>
+                    <div id="reload-prompt" class="hidden-animation">PRESS [R] TO RECHARGE</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Screen Overlays -->
+
+    <!-- Start / Title Screen -->
+    <div id="screen-start" class="screen-overlay active">
+        <div class="overlay-card glass-panel">
+            <h1 class="logo-text">NEON APTAKI</h1>
+            <p class="subtitle">PROCEDURAL 3D INTERACTIVE TESTING GRID</p>
+            
+            <div class="instructions">
+                <div class="instruction-row">
+                    <span class="key">W</span> <span class="key">A</span> <span class="key">S</span> <span class="key">D</span>
+                    <span class="desc">MOVE AVATAR</span>
+                </div>
+                <div class="instruction-row">
+                    <span class="key mouse-key">MOUSE</span>
+                    <span class="desc">LOOK AROUND (360°)</span>
+                </div>
+                <div class="instruction-row">
+                    <span class="key mouse-click-key">L-CLICK</span>
+                    <span class="desc">DISCHARGE PLASMA RIFLE</span>
+                </div>
+                <div class="instruction-row">
+                    <span class="key">SPACE</span>
+                    <span class="desc">THRUST (JUMP)</span>
+                </div>
+                <div class="instruction-row">
+                    <span class="key">R</span>
+                    <span class="desc">RECHARGE PLASMA CELL</span>
+                </div>
+                <div class="instruction-row">
+                    <span class="key">ESC</span>
+                    <span class="desc">UNLOCK CURSOR / PAUSE</span>
+                </div>
+            </div>
+
+            <div class="audio-opt-in">
+                <label class="switch-container">
+                    <input type="checkbox" id="audio-toggle" checked>
+                    <span class="switch-slider"></span>
+                </label>
+                <span class="audio-text">ENABLE SYNTHESIZED AUDIO FX</span>
+            </div>
+
+            <button id="btn-play" class="btn-primary">INITIALIZE LINK</button>
+        </div>
+    </div>
+
+    <!-- Pause Screen -->
+    <div id="screen-pause" class="screen-overlay hidden">
+        <div class="overlay-card glass-panel">
+            <h2 class="overlay-title">SYSTEM SUSPENDED</h2>
+            <p class="overlay-message">NEURAL LINK DISCONNECTED</p>
+            <button id="btn-resume" class="btn-primary">RE-ESTABLISH LINK</button>
+        </div>
+    </div>
+
+    <!-- Game Over Screen -->
+    <div id="screen-gameover" class="screen-overlay hidden">
+        <div class="overlay-card glass-panel error-panel">
+            <h2 class="overlay-title glitch-text" data-text="LINK TERMINATED">LINK TERMINATED</h2>
+            <p class="overlay-message">CRITICAL INTEGRITY FAILURE</p>
+            
+            <div class="stats-summary">
+                <div class="summary-row">
+                    <span>FINAL SCORE</span>
+                    <span id="final-score" class="highlight-val">0</span>
+                </div>
+                <div class="summary-row">
+                    <span>SECTOR RECORD</span>
+                    <span id="final-highscore" class="highlight-val">0</span>
+                </div>
+            </div>
+
+            <button id="btn-restart" class="btn-primary btn-error">REBOOT CORE</button>
+        </div>
+    </div>
+
+    <!-- Three.js CDN Library -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <!-- Postprocessing dependencies for Bloom -->
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/postprocessing/EffectComposer.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/postprocessing/RenderPass.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/postprocessing/ShaderPass.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/shaders/CopyShader.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/shaders/LuminosityHighPassShader.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/postprocessing/UnrealBloomPass.js"></script>
+    <script src="game.js"></script>
+</body>
+</html>
